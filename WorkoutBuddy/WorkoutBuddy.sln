@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32630.192
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutBuddy.WebApp", "WorkoutBuddy.WebApp\WorkoutBuddy.WebApp.csproj", "{D8461090-E9BE-41DA-AD01-6A5BFDA5E65B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{282631C6-B5FE-453F-AB3F-6175405ED821}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{60EE5D6C-5C53-4FBA-AFCE-A86927BE41DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{DF7E05DC-F31E-479A-BBF7-FDABC15C1E69}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutBuddy.Common", "WorkoutBuddy.Common\WorkoutBuddy.Common.csproj", "{920BD69C-EFDA-4500-BAAA-338C6F870A89}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutBuddy.DataAccess", "WorkoutBuddy.DataAccess\WorkoutBuddy.DataAccess.csproj", "{FA8891B9-DBA4-4271-9889-0B5E49DD2C08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutBuddy.Entities", "WorkoutBuddy.Entities\WorkoutBuddy.Entities.csproj", "{150FC5E5-96F3-4932-97CE-39F0163931FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkoutBuddy.BusinessLogic", "WorkoutBuddy.BusinessLogic\WorkoutBuddy.BusinessLogic.csproj", "{BF4925C1-00DD-45A1-87A9-349A00E7FFE9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8461090-E9BE-41DA-AD01-6A5BFDA5E65B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8461090-E9BE-41DA-AD01-6A5BFDA5E65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8461090-E9BE-41DA-AD01-6A5BFDA5E65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8461090-E9BE-41DA-AD01-6A5BFDA5E65B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{920BD69C-EFDA-4500-BAAA-338C6F870A89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{920BD69C-EFDA-4500-BAAA-338C6F870A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{920BD69C-EFDA-4500-BAAA-338C6F870A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{920BD69C-EFDA-4500-BAAA-338C6F870A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA8891B9-DBA4-4271-9889-0B5E49DD2C08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA8891B9-DBA4-4271-9889-0B5E49DD2C08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA8891B9-DBA4-4271-9889-0B5E49DD2C08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA8891B9-DBA4-4271-9889-0B5E49DD2C08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{150FC5E5-96F3-4932-97CE-39F0163931FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{150FC5E5-96F3-4932-97CE-39F0163931FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{150FC5E5-96F3-4932-97CE-39F0163931FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{150FC5E5-96F3-4932-97CE-39F0163931FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF4925C1-00DD-45A1-87A9-349A00E7FFE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF4925C1-00DD-45A1-87A9-349A00E7FFE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF4925C1-00DD-45A1-87A9-349A00E7FFE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF4925C1-00DD-45A1-87A9-349A00E7FFE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D8461090-E9BE-41DA-AD01-6A5BFDA5E65B} = {282631C6-B5FE-453F-AB3F-6175405ED821}
+		{FA8891B9-DBA4-4271-9889-0B5E49DD2C08} = {DF7E05DC-F31E-479A-BBF7-FDABC15C1E69}
+		{150FC5E5-96F3-4932-97CE-39F0163931FF} = {60EE5D6C-5C53-4FBA-AFCE-A86927BE41DE}
+		{BF4925C1-00DD-45A1-87A9-349A00E7FFE9} = {60EE5D6C-5C53-4FBA-AFCE-A86927BE41DE}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {20F3EB99-D87B-4E53-ACCD-81B338548C35}
+	EndGlobalSection
+EndGlobal

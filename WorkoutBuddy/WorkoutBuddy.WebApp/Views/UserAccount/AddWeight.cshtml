@@ -1,0 +1,62 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Account.Models
+@model AddWeightModel
+
+@{
+    ViewData["Title"] = "Add weight";
+}
+
+<style>
+    .replyButton:hover {
+        background-color: #b3b3b3;
+    }
+</style>
+<div class="container">
+    <h1>Add current weight</h1>
+    <hr />
+    <div class="row justify-content-center">
+        <div style="border-radius: 1.5rem; background-color: white; padding:1rem; width: 35rem">
+            <form asp-action="AddWeight">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div>
+                    <label asp-for="Weight" class=" "></label>
+                    <input asp-for="Weight" type="number" class="form-control" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+                <div style="display: flex; justify-content: center; padding: 1rem 0 0 0;">
+                    <button type="submit" class="btn replyButton"><i class="fa-solid fa-paper-plane"></i> Add weight</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr />
+
+    <h3>Weight history:</h3>
+    @if (Model.History.Count == 0)
+    {
+        <h1 class="text-warning">There is no previous recorded weight!</h1>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Weighing Date</th>
+                    <th scope="col">Weight</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = Model.History.Count - 1; i >= 0; i--)
+                {
+                    <tr>
+                        <th scope="row">@(Model.History.Count - i)</th>
+                        <td>@Model.History[i].Date.Day/@Model.History[i].Date.Month/@Model.History[i].Date.Year</td>
+                        <td>@Model.History[i].Weight</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+

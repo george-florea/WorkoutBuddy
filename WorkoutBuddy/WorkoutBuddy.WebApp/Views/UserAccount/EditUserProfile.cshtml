@@ -1,0 +1,65 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Account.Models
+@using WorkoutBuddy.Entities.Enums
+@model EditUserModel
+@{
+    ViewData["Title"] = "Edit user profile";
+}
+
+<div class="container" style="display:flex; justify-content:center">
+    <div style="border: 6px solid #d4f0a5;border-radius: 0.6rem;padding: 1rem 2rem;width: 35rem;height: 40rem; background-color: #393E46; color:  #d4f0a5">
+        <h1 style="margin-left: -7%;border-bottom: 6px solid #d4f0a5;width: 114%; padding:0 0 3% 7%; color: #efefef">
+            Edit user profile
+        </h1>
+        <form asp-action="EditUserProfile" style="height:85%">
+            <div class="d-flex flex-column justify-content-evenly" style="height:100%">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="UserId" style="display:none" value="@Model.UserId"/>
+                <div>
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="UserName" class="control-label"></label>
+                    <input asp-for="UserName" class="form-control" />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div style="color:#393E46">
+                    <label name="Roles" class="control-label" style="color:#d4f0a5">Roles:</label>
+                    <select class="roleList form-select" name="Roles" multiple="multiple">
+                        @foreach (var role in Enum.GetValues(typeof(RoleTypes)))
+                        {
+                            @if (Model.Roles.Contains((int)role))
+                            {
+                                <option value="@((int)role)" selected>@role.ToString()</option>
+                            }
+                            else
+                            {
+                                <option value="@((int)role)">@role.ToString()</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="Roles" class="text-danger"></span>
+                </div>
+                <div style="text-align:center">
+                    <input type="submit" value="Edit" class="btn" style="width: 60%; background-color:#d4f0a5" id="addExerciseSubmitBtn" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.roleList').select2()
+        });
+    </script>
+}

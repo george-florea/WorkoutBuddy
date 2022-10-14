@@ -1,0 +1,174 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.UserSplitColection.Models
+@model List<ExercisesProgressModel>
+
+<div class="container">
+    <h1>Your exercises progress in this workout:</h1>
+
+    <hr />
+
+    @if (Model.Count == 1 && Model[0].Days == null)
+    {
+        <div class="d-flex flex-column justify-content-center">
+            <h1 class="text-warning text-center">You didn't record any progress for this workout!</h1>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <a class="text-secondary btn btn-outline-warning w-100" asp-controller="UserSplit" asp-action="AddProgress" asp-route-id="@Model[0].WorkoutId">Click here to add progress</a>
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <div class="d-flex justify-content-center">
+                        @if (String.Compare(ViewData["index"].ToString(), "0") != 0)
+                        {
+                            <div class="btn-group">
+                                <a class="btn btn-outline-secondary" style="margin-right:40px" asp-action="ExercisesProgress" asp-route-id="@Model[0].WorkoutId" asp-route-index="@(Int32.Parse(ViewData["Index"].ToString()) - 1)">Prev week</a>
+                            </div>
+                        }
+                        @if (String.Compare(ViewData["index"].ToString(), ViewData["pagesNo"].ToString()) < 0)
+                        {
+                            <div class="btn-group">
+                                <a class="btn btn-outline-secondary" style="margin-left:40px" asp-action="ExercisesProgress" asp-route-id="@Model[0].WorkoutId" asp-route-index="@(Int32.Parse(ViewData["Index"].ToString()) + 1)">Next week</a>
+                            </div>
+                        }
+                    </div>
+                    @if (String.Compare(ViewData["index"].ToString(), "0") != 0 && String.Compare(ViewData["index"].ToString(), ViewData["pagesNo"].ToString()) < 0)
+                    {
+                        <hr />
+                    }
+                </div>
+                <div class="col"></div>
+            </div>
+            @for (var exIndex = 0; exIndex < @Model.Count; exIndex++)
+            {
+                <div class="m-3 p-3"  style="background-color:#393E46; color:#d4f0a5; border-radius: 1.5rem">
+                    <div class="row">
+                        <div class="col">
+                            <h4 class="card-title">@Model[exIndex].ExerciseName:</h4>
+                        </div>
+                        <div class="col">
+                            <div class="d-flex justify-content-center">
+                                <div class="btn-group">
+                                    <button type="button" id="infoBtn_@exIndex" class="btn btn-secondary" style="margin-right:40px; color: #d4f0a5">Progress info</button>
+                                </div>
+                                <div class="btn-group">
+                                    <button type="button" id="chartBtn_@exIndex" class="btn btn-outline-secondary" style="margin-left:40px; color: #d4f0a5">Progress chart</button>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div class="col"></div>
+                    </div>
+
+                    <table class="table" id="infoTable_@exIndex" style="color:#d4f0a5">
+                        <thead>
+                            <tr>
+                                <th scope="col">Set No</th>
+                                @foreach (var day in Model[exIndex].Days)
+                                {
+                                    <th scope="col">@day.Date?.ToString("dd/MM/yyyy")</th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (var i = 0; i < Model[exIndex].MaxSets; i++)
+                            {
+                                <tr>
+                                    <th scope="row">@(i + 1)</th>
+                                    @for (var index = 0; index < Model[exIndex].Days.Count; index++)
+                                    {
+                                        @try
+                                        {
+                                            @if (Model[exIndex].Days[index].Sets[i].Distance != null && Model[exIndex].Days[index].Sets[i].Duration != null)
+                                            {
+                                                <td>
+                                                    @Model[exIndex].Days[index].Sets[i].Distance m  x  @Model[exIndex].Days[index].Sets[i].Duration mins
+                                                </td>
+                                            }
+                                            @if (Model[exIndex].Days[index].Sets[i].Reps != null && Model[exIndex].Days[index].Sets[i].Weight != null)
+                                            {
+                                                <td>
+                                                    @Model[exIndex].Days[index].Sets[i].Reps reps  x  @Model[exIndex].Days[index].Sets[i].Weight kgs
+                                                </td>
+                                            }
+                                        }
+                                        catch
+                                        {
+                                            <td></td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <div class="container" id="chart_@exIndex" style="display:none">
+                        <canvas id="myChart_@exIndex"></canvas>
+                    </div>
+                </div>
+
+            }
+        </div>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="~/js/UserSplit/SeeHistory.js"></script>
+        <script>
+            let datesList = [];
+            let dateBtn = 0;
+            let navparent = 0
+            let coefList = []
+            @for (var index = 0; index < Model.Count; index++)
+            {
+                <text>
+                    window['infoBtn' + '@index'] = document.getElementById('infoBtn_@index')
+                window['chartBtn' + '@index'] = document.getElementById('chartBtn_@index')
+                window['info' + '@index'] = document.getElementById('infoTable_@index')
+                window['chart' + '@index'] = document.getElementById('chart_@index')
+
+                window['infoBtn' + '@index'].onclick = e => {
+                    datesList = []
+                    coefList = []
+                    window['chart' + '@index'].style.display = "none"
+                    window['info' + '@index'].style.display = "block"
+
+                    window['chartBtn' + '@index'].classList.remove("btn-secondary")
+                    window['chartBtn' + '@index'].classList.add("btn-outline-secondary")
+                    e.currentTarget.classList.remove("btn-outline-secondary")
+                    e.currentTarget.classList.add("btn-secondary")
+                }
+
+                window['chartBtn' + '@index'].onclick = e => {
+                    datesList = []
+                    coefList = []
+                    @for (var i = 0; i < Model[index].Days.Count; i++)
+                    {
+                        @:datesList.push('@Model[index].Days[i].Date')
+                        @:coefList.push('@Model[index].Days[i].ExerciseCoef')
+                    }
+
+                        window['info' + '@index'].style.display = "none"
+                    window['chart' + '@index'].style.display = "block"
+
+                    e.currentTarget.classList.add("btn-secondary")
+                    e.currentTarget.classList.remove("btn-outline-secondary")
+                    window['infoBtn' + '@index'].classList.add("btn-outline-secondary")
+                    window['infoBtn' + '@index'].classList.remove("btn-secondary")
+                    ChartBuilder('@index', datesList, coefList);
+                }
+
+                </text>
+            }
+        </script>
+    }
+</div>
+
+

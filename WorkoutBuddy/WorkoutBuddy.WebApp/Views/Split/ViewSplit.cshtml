@@ -1,0 +1,219 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.ManageSplits.Models
+@model ViewSplitModel
+
+@using WorkoutBuddy.Common.DTOs
+@using WorkoutBuddy.Entities.Enums
+@inject CurrentUserDto CurrentUser
+
+<link rel="stylesheet" href="~/css/splits.css"/>
+<style>
+    .deleteButton:hover {
+        background-color: #ff9999;
+        color: white !important;
+    }
+
+    .replyButton:hover {
+        background-color: #b3b3b3;
+    }
+</style>
+
+<div class="container containerResp box-shadow" style="display:flex;justify-content:center; flex-direction:column;align-items: center;">
+    <div style="border: 6px solid #d4f0a5;border-radius: 0.6rem;padding: 1rem 2rem;width: 55rem; background-color: #393E46; color:  #d4f0a5">
+        <div class="row" style="margin-left: -4%;border-bottom: 6px solid #d4f0a5;width: 108%; padding:0 0 3% 7%; color: #efefef">
+            <div class="col-8">
+                <h1 class="card-title">@Model.Name</h1>
+                <h6 class="card-subtitle">Creator: @Model.CreatorName</h6>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button id="addToColection" class="btn rounded-pill d-flex flex-row justify-content-around p-2" style="background-color:#d4f0a5; color:#393E46; width:80%;justify-content: center;align-items: center;height: 70%;">
+                    <div class="rounded-circle bg-white" style="width:20%; color:black; margin-right: 0.7rem;">
+                        <i class="fa-solid fa-plus"></i>
+                    </div>
+                    <div class="text-center">
+                        Add to colection
+                    </div>
+                </button>
+            </div>
+        </div>
+        <p style="margin-top: 1rem;"><strong>Description: </strong>@Model.Description</p>
+        <p style="font-weight: bold">
+            This split contain the following workouts:
+        </p>
+        <ol>
+            @foreach (var workout in Model.Workouts)
+            {
+                <li>
+                    <h6>@workout.WorkoutName</h6>
+                    <ul>
+                        @foreach (var ex in workout.ExercisesList)
+                        {
+                            <li>
+                                @ex
+                            </li>
+                        }
+                    </ul>
+                </li>
+            }
+        </ol>
+    </div>
+    <div class="row" style="margin-top: 15px; width:54rem; padding:1rem;">
+        <h3>Comments:</h3>
+        <div class="d-flex justify-content-center">
+            <div style="border-radius: 1.5rem; background-color: white; padding:1.5rem; width: 35rem">
+                <textarea class="input-group"
+                          placeholder="Write a new comment"
+                          id="comment"></textarea>
+                <button type="button" id="addComment" class="btn replyButton"><i class="fa-solid fa-paper-plane"></i> Post comment</button>
+            </div>
+        </div>
+        @for (var i = 0; i < Model.Comments.Count; i++)
+        {
+            <div class="card-body" id="comment_@i" style="border-radius: 1.5rem; background-color: white; margin-top:1rem">
+                <div class="row">
+                    <div class="col-9">
+                        <h6 class="card-title"><i class="fa-solid fa-user"></i> @Model.Comments[i].Author</h6>
+                        <p class="card-subtitle"><i class="fa-solid fa-users-gear"></i> @Model.Comments[i].AuthorRole</p>
+                        <p class="card-text mx-2 ml-3">"@Model.Comments[i].CommentText"</p>
+                    </div>
+                    <div class="col d-flex flex-column justify-content-center align-content-center">
+                        @if (CurrentUser.Roles.Contains(nameof(RoleTypes.Admin)) || CurrentUser.Roles.Contains(nameof(RoleTypes.UserOfTheWeek)) || Model.CreatorId == CurrentUser.Id || Model.Comments[i].Author == CurrentUser.Username)
+                        {
+                            <button type="button" id="addReply_@i" class="btn align-self-center w-50 replyButton"><i class="fa-solid fa-share"></i> Reply</button>
+                            <a id="delete_@i" class="btn w-50 text-danger align-self-center deleteButton" data-value="@Model.Comments[i].CommentId"><i class="fa-solid fa-x "></i> Delete</a>
+                        }
+                    </div>
+                </div>
+
+                <div class="btn-group-sm">
+                    <button type="button" id="showReplies_@i" class="btn replyButton"><i class="fa-solid fa-chevron-down"></i> Show replies</button>
+                </div>
+                @if (CurrentUser.Roles.Contains(nameof(RoleTypes.Admin)) || CurrentUser.Roles.Contains(nameof(RoleTypes.UserOfTheWeek)) || Model.CreatorId == CurrentUser.Id || Model.Comments[i].Author == CurrentUser.Username)
+                {
+                    <div class="card-body" style="display:none; background-color:#efefef ; margin-top: 1rem; border-radius: 1.5rem" id="replyform_@i">
+                        <textarea class="input-group" placeholder="Write a new reply" id="reply" > </textarea>
+                        <input style="display:none" value="@Model.Comments[i].CommentId" />
+                        <button type="button" id="sendReply_@i" class="btn replyButton"><i class="fa-solid fa-paper-plane"></i> Post reply</button>
+                    </div>
+                }
+                <div style="display:none; margin-left: 2rem" id="replies_@i">
+                    @if(Model.Comments[i].CommentReplys.Count == 0)
+                    {
+                        <h6 class="text-warning mt-1">No replies <i class="fa-solid fa-heart-crack text-danger"></i></h6>
+                    }
+                    @for (var j = 0; j < Model.Comments[i].CommentReplys.Count; j++)
+                    {
+                        var reply = Model.Comments[i].CommentReplys[j];
+                        <div class="card-body" style="background-color:#efefef ; margin-top: 1rem; border-radius: 1.5rem">
+                            <div class="row">
+                                <div class="col-9">
+                                    <h6 class="card-subtitle">@reply.Author</h6>
+                                    <p class="card-subtitle"><i class="fa-solid fa-users-gear"></i> @reply.AuthorRole</p>
+                                    <p class="card-text mx-2 ml-3">"@reply.CommentText"</p>
+                                </div>
+                                <div class="col" style="display:flex; justify-content:end">
+                                    @if (CurrentUser.Roles.Contains(nameof(RoleTypes.Admin)) || CurrentUser.Roles.Contains(nameof(RoleTypes.UserOfTheWeek)) || Model.CreatorId == CurrentUser.Id)
+                                    {
+                                        <a id="deleteReply_@(i)_@j" class="btn text-danger align-self-center deleteButton" data-value="@reply.CommentId"><i class="fa-solid fa-x "></i> Delete</a>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Split/ViewSplit.js"></script>
+    <script>
+        let btn = document.getElementById('addComment');
+        let comment = document.getElementById('comment');
+        btn.onclick = e => {
+            if (e.currentTarget.parentNode.children[0].value == "") {
+                alert("You cannot add a empty comment!")
+            }
+            else {
+                AddComment('@Url.Action("AddComment", "Comment")'
+                    , e.currentTarget.parentNode.children[0].value
+                    , '@Model.SplitId');
+            }
+        }
+
+        for (let i = 0; i < '@Model.Comments.Count'; i++) {
+            window[`deleteBtn_${i}`] = document.getElementById(`delete_${i}`);
+            if (window[`deleteBtn_${i}`] != null) {
+                window[`deleteBtn_${i}`].onclick = e => {
+                    Delete('@Url.Action("DeleteComment", "Comment")', e, false);
+                }
+            }
+
+            window[`replyBtn_${i}`] = document.getElementById(`addReply_${i}`)
+            window[`replyForm_${i}`] = document.getElementById(`replyform_${i}`)
+            if (window[`replyBtn_${i}`] != null) {
+                window[`replyBtn_${i}`].onclick = e => {
+                    if (window[`replyForm_${i}`].style.display == "none") {
+                        window[`replyForm_${i}`].style.display = "block"
+                    }
+                    else {
+                        window[`replyForm_${i}`].style.display = "none"
+                    }
+                }
+                let sendReply = window[`replyForm_${i}`].children[2]
+                sendReply.onclick = e => {
+                    if (window[`replyForm_${i}`].children[0].value == "") {
+                        alert("You cannot reply with an empty message!")
+                    }
+                    else {
+                        AddComment('@Url.Action("AddComment", "Comment")'
+                            , window[`replyForm_${i}`].children[0].value
+                            , '@Model.SplitId'
+                            , window[`replyForm_${i}`].children[1].value);
+                    }
+
+                }
+            }
+            window[`showReplies_${i}`] = document.getElementById(`showReplies_${i}`)
+            window[`replies_${i}`] = document.getElementById(`replies_${i}`)
+            window[`showReplies_${i}`].onclick = e => {
+                if (window[`replies_${i}`].style.display == "none") {
+                    window[`replies_${i}`].style.display = "block"
+                }
+                else {
+                    window[`replies_${i}`].style.display = "none"
+                }
+            }
+
+            for (var j = 0; j < window[`replies_${i}`].children.length; j++) {
+                window[`deleteReply_${i}_${j}`] = document.getElementById(`deleteReply_${i}_${j}`);
+
+                if (window[`deleteReply_${i}_${j}`] != null) {
+                    window[`deleteReply_${i}_${j}`].onclick = e => {
+                        Delete('@Url.Action("DeleteComment", "Comment")', e, true);
+                    }
+                }
+            }
+
+        }
+
+        let colectionBtn = document.getElementById("addToColection")
+        colectionBtn.onclick = e => {
+            let model = {
+                "SplitId": '@Model.SplitId',
+            }
+            $.ajax({
+                type: "post",
+                url: '@Url.Action("AddToUserSplits", "Split")',
+                success: (resp) => {
+                    alert(resp.message);
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+                contentType: "application/json",
+                data: JSON.stringify('@Model.SplitId')
+            })
+        }
+    </script>
+}

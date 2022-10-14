@@ -1,0 +1,107 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Home
+@using WorkoutBuddy.Common.DTOs
+@using WorkoutBuddy.Entities.Enums
+@model HomeModel
+@inject CurrentUserDto CurrentUser
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<div class="container" style="height:100%">
+    <h1 class="text-center" style="color: #393E46">Welcome back, @CurrentUser.Username!</h1>
+    <hr />
+    <div class="d-flex flex-column align-items-center justify-content-evenly" style="height:80%" >
+        @if (ViewData["IsUserOfTheWeek"].ToString() == "True")
+        {
+            <div class="text-center">
+                <a id="claimRole" class="btn btn-success btn-lg" style="margin-bottom:16px">
+                    <i class="fa-solid fa-gift text-danger"></i>
+                    Claim your role
+                    <i class="fa-solid fa-gift text-danger"></i>
+                </a>
+            </div>
+        }
+        <div class="d-flex flex-row item" style="margin-top:20px; width:100%">
+            <div class="col-4 d-flex align-items-center justify-content-center" style="background-color: #393E46;color: #efefef;box-sizing: border-box; border-radius: 5rem 0 0 15rem; padding: 0 10px;">
+                <h2 class="card-title">Most rated split:</h2>
+            </div>
+            <div class="col" style="background-color: #d4f0a5; color: #393E46; padding:15px 35px; box-sizing: border-box; border-radius:0 15rem 5rem 0">
+                <h4 class="card-subtitle text-center">@Model.Split.Name</h4>
+                <hr style="width:92%" />
+                <p class="card-text"><strong>Description:</strong> @Model.Split.Description</p>
+                <p class="card-text"><strong>Creator:</strong> @Model.Split.CreatorName</p>
+                <p class="card-text"><strong>Number of workouts:</strong> @Model.Split.WorkoutsNo</p>
+                <p class="card-text"><strong>Rating:</strong> @Model.Split.Rating</p>
+            </div>
+        </div>
+
+        <div class="d-flex flex-row item" style="margin-top:20px; width:100%">
+            <div class="col-4 d-flex align-items-center justify-content-center" style="background-color: #393E46;color: #efefef;box-sizing: border-box; border-radius: 15rem 0 0 5rem;padding: 0 10px;">
+                <h2 class="card-title">User of the week:</h2>
+            </div>
+            <div class="col" style="background-color: #d4f0a5; color: #393E46; padding:15px 35px; box-sizing: border-box; border-radius:0 5rem 15rem 0">
+                <h4 class="card-subtitle text-center">@Model.User.Username</h4>
+                <hr class="w-82" />
+                <p class="card-text"><strong>Points obtained during this week:</strong> @Model.User.PointsNo</p>
+                <p class="card-text"><strong>Splits created by this user:</strong></p>
+                @foreach (var split in Model.User.SplitsNames)
+                {
+                    <p><i class="fa-solid fa-arrow-right"></i>  @split</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://kit.fontawesome.com/54c6de26eb.js" crossorigin="anonymous"></script>
+    <script>
+        $("#claimRole").click(e => {
+            $.ajax({
+                type: "post",
+                url: "/UserAccount/GrantRole",
+                success: (resp) => {
+                    console.log(resp);
+                    $("#claimRole").css("display", "none");
+
+                    let card = document.createElement("div");
+                    card.classList.add("card");
+                    card.classList.add("mb-10");
+
+                    let cardHeader = document.createElement("div");
+                    cardHeader.classList.add("card-header");
+
+                    let cardTitle = document.createElement("h3");
+                    cardTitle.classList.add("card-title");
+                    cardTitle.classList.add("text-success");
+                    cardTitle.innerText = "You now have the UserOfTheWeek role!";
+                    cardHeader.append(cardTitle);
+
+                    card.append(cardHeader);
+
+                    let cardBody = document.createElement("div");
+                    cardBody.classList.add("card-body");
+
+                    let cardSubtitle = document.createElement("h5");
+                    cardSubtitle.classList.add("card-subtitle");
+                    cardSubtitle.innerText = "What does this mean?";
+
+                    let cardText = document.createElement("p");
+                    cardText.classList.add("card-text");
+                    cardText.innerText = "You can now reply to the comments on other people's splits and also delete comments if you consider the inappropriate! Your role also appears before your name when you comment, to let others know that you posses the necessary information to help them";
+
+                    cardBody.append(cardSubtitle);
+                    cardBody.append(cardText);
+
+                    card.append(cardBody);
+
+                    $("#claimRole").parent().append(card);
+                },
+                error: (err) => {
+                    console.log(err);
+                },
+            })
+        })
+    </script>
+}

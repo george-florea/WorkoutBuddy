@@ -1,0 +1,91 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.UserSplitColection.Models
+@model List<UserSplitListItem>
+
+@{
+    ViewData["Title"] = "My collection";
+}
+
+<link rel="stylesheet" href="~/css/usersplit.css"/>
+
+<div class="container">
+    <div class="row">
+        <div class="col-4-sm">
+            <h1>Your splits collection:</h1>
+        </div>
+        <div class="col-sm"></div>
+        <div class="col-sm"> </div>
+
+    </div>
+
+    <hr />
+    @if (Model.Count == 0)
+    {
+        <div class="d-flex flex-column justify-content-center">
+            <h1 class="text-warning text-center">You don't have any splits in your collection!</h1>
+            <div class="row">
+                <div class="col"></div>
+                <div class="col">
+                    <a class="text-secondary btn btn-outline-warning w-100" asp-controller="Split" asp-action="Index">Click here to go to splits</a>
+                </div>
+                <div class="col"></div>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="d-flex flex-column align-items-center">
+            @foreach (var split in Model)
+            {
+                <div class="card" style="margin: 10px; width:80%; height:12rem">
+                    <div class="d-flex flex-row item" style="height: 100%">
+                        <div class="col-3 d-flex align-items-center justify-content-center" style="background-color: #393E46; color: #efefef">
+                            <h2 class="card-title">@split.Name</h2>
+                        </div>
+                        <div class="col-9 d-flex align-items-center" style="background-color: #d4f0a5">
+                            <div class="card-body d-flex flex-row contentResp" style="height:100%">
+                                <div class="col-9 d-flex align-content-center">
+                                    <dl class="row" style="height:70%; margin-bottom:0; align-self:center">
+                                        <dt class="col-sm-4">Description:</dt>
+                                        @if (split.Description.Length > 150)
+                                        {
+                                            <dd class="col-sm-8">@split.Description.Substring(0, 150) ...</dd>
+                                        }
+                                        else
+                                        {
+                                            <dd class="col-sm-8">@split.Description</dd>
+                                        }
+                                        <dt class="col-sm-4">Number of workouts</dt>
+                                        <dd class="col-sm-8">@split.WorkoutsNo</dd>
+                                    </dl>
+                                </div>
+                                <div class="col-3">
+                                    <div class="d-flex flex-column justify-content-evenly" style="height:100%;">
+                                        <a type="button" class="btn btn-secondary rounded-pill d-flex flex-row justify-content-around p-2" asp-controller="UserSplit" asp-action="ViewUserSplit" asp-route-id="@split.SplitId">
+                                            <div class="rounded-circle bg-white" style="width:20%; color:black; margin-right: 0.7rem;">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </div>
+                                            <div class="text-center">
+                                                View
+                                            </div>
+                                        </a>
+                                        <form asp-controller="UserSplit" asp-action="RemoveUserSplit" asp-route-id="@split.SplitId" onclick="return confirm('Are you sure you want to remove this?')">
+                                            <button type="submit" class="btn btn-danger rounded-pill d-flex flex-row justify-content-around p-2" style="width:100%">
+                                                <div class="rounded-circle bg-white" style="width:20%; color:black">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </div>
+                                                <div class="text-center">
+                                                    Remove
+                                                </div>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

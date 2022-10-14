@@ -1,0 +1,24 @@
+﻿@media only screen and (max-width: 600px) {
+    .split-resp {
+        flex-direction:column!important
+    }
+
+        .split-resp:last-child > * {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .split-resp:last-child > * > *{
+            width:50%
+        }
+
+    .containerResp{
+        width: 100vw;
+        margin-left:0;
+    }
+
+    .containerResp > *{
+        width: 100% !important;
+    }
+}

@@ -1,0 +1,34 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Exercises.Models
+@model ExercisesModel
+@{
+    ViewData["Title"] = @Model.Name;
+}
+
+<link rel="stylesheet" href="~/css/exercises.css"/>
+
+<div class="container box-shadow" style="margin-top: 2.5rem; height:15rem">
+    <div class="row border">
+        <div class="col" style="padding:0px">
+            <img class="card-img-top" style="height: 30rem; width: 45rem; display: block;" src="/Image/GetImgContent?id=@Model.IdImage" />
+        </div>
+        <div class="col" style="background-color: #393E46; color:#d4f0a5">
+            <div class="box-shadow">
+                <div class="card-body" style="height:100%">
+                    <h1 class="card-title">@Model.Name</h1>
+                    <hr />
+                    <p><i class="fa-solid fa-forward"></i>  <b>Exercise type:</b> @Model.ExerciseType</p>
+                    <p><i class="fa-solid fa-forward"></i>  <b>Description:</b> @(Model.Description ?? "-")</p>
+                    <p style="font-weight: bold">
+                        <i class="fa-solid fa-forward"></i>  This exercise targets:
+                    </p>
+                    <ul>
+                        @foreach (var muscleGroup in Model.MuscleGroups)
+                        {
+                            <li>@muscleGroup</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

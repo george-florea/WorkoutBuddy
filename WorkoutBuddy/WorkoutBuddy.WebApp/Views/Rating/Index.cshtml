@@ -1,0 +1,58 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Rating
+@model List<RankingListItem>
+
+@{
+    ViewData["title"] = "Ranking";
+}
+
+<style>
+    .table td, .table th {
+        padding: 10px 14px;
+    }
+
+    .table td {
+        border-bottom: 1px solid #393E46;
+    }
+
+    .table th {
+        border-bottom: 2px solid #393E46;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+</style>
+<div class="container">
+    <h1>
+        This week (@ViewData["startDate"].ToString() - @ViewData["endDate"].ToString()) rating:
+    </h1>
+    <hr />
+
+    <table class="table" style="background-color: #d4f0a5 ; color: #393E46; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th scope="col">Rank</th>
+                <th scope="col">User</th>
+                <th scope="col">Number of points</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td scope="row">
+                        @(i + 1)
+                        @if (i == 0)
+                        {
+                            <i class="fas fa-trophy text-warning"></i>
+                        }
+                    </td>
+                    <td>@Model[i].UserName</td>
+                    <td>@Model[i].PointsNo</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script src="https://kit.fontawesome.com/54c6de26eb.js" crossorigin="anonymous"></script>

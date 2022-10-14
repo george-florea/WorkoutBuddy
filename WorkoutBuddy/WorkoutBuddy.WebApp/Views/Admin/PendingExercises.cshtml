@@ -1,0 +1,91 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Exercises.Models
+@model List<ExerciseAsListItemModel>
+@{
+    var index = 0;
+}
+<div class="container">
+    <h1>Pending exercises:</h1>
+    <hr />
+
+    <div class="row">
+        @foreach (var exercise in Model)
+        {
+            <div id="exercise_@exercise.ExerciseId" class="col-md-4">
+                <div class="card mb-4 box-shadow">
+                    <img class="card-img-top" style="height: 225px; width: 100%; display: block;" src="/Image/GetImgContent?id=@exercise.IdImage" />
+
+                    <div class="card-body" style="background-color: #393E46 ; color:#efefef ">
+                        <h5 class="card-title">@exercise.Name</h5>
+                        <p class="card-text">Exercise type: @exercise.ExerciseType</p>
+                        <div class="d-flex justify-content-evenly align-items-center">
+                            <a id="approve_@index" type="button" class="btn btn btn-success rounded-pill d-flex flex-row justify-content-between" style="width:8rem" asp-controller="Exercise" asp-action="ViewExercise" asp-route-id="@exercise.ExerciseId">
+                                <div class="rounded-circle bg-white" style="width:37%; color:black; margin-right: 0.7rem;">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div>
+                                    Approve
+                                </div>
+                            </a>
+                            <a id="reject_@index" type="button" class="btn btn-danger rounded-pill d-flex flex-row justify-content-around" style="width:8rem">
+                                <div class="rounded-circle bg-white" style="width:34%; color:black">
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                                <div>
+                                    Reject
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            index++;
+        }
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        for (let i = 0; i < '@index'; i++) {
+            $(`#approve_${i}`).click(e => {
+                let btn = e.currentTarget
+                let div = btn.parentNode.parentNode.parentNode.parentNode;
+                let id = div.id.split("_")[1];
+                $.ajax({
+                    type: "post",
+                    url: "/Exercise/ApproveExercise",
+                    success: (resp) => {
+                        console.log(resp);
+                        div.style.display = "none"
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    },
+                    contentType: "application/json",
+                    data: JSON.stringify(id)
+                })
+            })
+            $(`#reject_${i}`).click(e => {
+                let btn = e.currentTarget
+                let div = btn.parentNode.parentNode.parentNode.parentNode;
+                let id = div.id.split("_")[1];
+                $.ajax({
+                    type: "post",
+                    url: "/Exercise/RejectExercise",
+                    success: (resp) => {
+                        console.log(resp);
+                        div.style.display = "none"
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    },
+                    contentType: "application/json",
+                    data: JSON.stringify(id)
+                })
+            })
+        }
+
+    </script>
+}

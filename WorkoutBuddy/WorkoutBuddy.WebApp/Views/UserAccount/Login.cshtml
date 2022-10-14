@@ -1,0 +1,58 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Models
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<style>
+    .registerBtn:hover {
+        background-color: #697180
+    }
+</style>
+
+<div class="container" style="display:flex; justify-content:center">
+    <div style="border: 6px solid #d4f0a5;border-radius: 0.6rem;padding: 1rem 2rem;width: 35rem;height: 30rem; background-color: #393E46; color:  #d4f0a5">
+        <h1 style="margin-left: -7%;border-bottom: 6px solid #d4f0a5;width: 114%; padding:0 0 3% 7%; color: #efefef">
+            Login
+        </h1>
+        <div id="form" class="d-flex flex-column" style="height: 80%;justify-content: space-between;">
+            <form asp-controller="UserAccount" asp-action="Login" style="height: 70%; display: flex; flex-direction: column; justify-content: space-evenly;">
+                @if (Model!= null && Model.IsDisabled)
+                {
+                    <div><span style="color:red">This user is disabled</span></div>
+                }
+                else if (Model!= null && Model.AreCredentialsInvalid)
+                {
+                    <div><span style="color:red">Invalid credentials</span></div>
+                }
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Password" class="control-label"></label>
+                    <input asp-for="Password" type="password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div style="text-align:center">
+                    <input type="submit" value="Login" class="btn" style="width: 60%; background-color:#d4f0a5" />
+                </div>
+            </form>
+
+            <div>
+                <h5>You dont't have an account? </h5>
+                <a class="btn registerBtn" style="color: #d4f0a5" asp-action="Register">Register now!</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

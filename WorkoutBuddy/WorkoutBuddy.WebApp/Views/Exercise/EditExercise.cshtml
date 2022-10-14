@@ -1,0 +1,81 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.ManageExercises.Models
+@model EditExerciseModel
+
+@{
+    ViewData["Title"] = "Edit Exercise";
+}
+
+<div class="container" style="display:flex; justify-content:center">
+    <div style="border: 6px solid #d4f0a5;border-radius: 0.6rem;padding: 1rem 2rem;width: 35rem;height: 40rem; background-color: #393E46; color:  #d4f0a5">
+        <h1 style="margin-left: -7%;border-bottom: 6px solid #d4f0a5;width: 114%; padding:0 0 3% 7%; color: #efefef">Edit exercise</h1>
+
+        <form asp-action="EditExercise" enctype="multipart/form-data" style="height:85%">
+            <div class="d-flex flex-column justify-content-between" style="height:100%">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input style="display:none" name="ExerciseId" value="@Model.ExerciseId"></input>
+                <div>
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                </div>
+                <div>
+                    <label name="SelectedType" class="control-label">Exercise Types:</label>
+                    <select name="SelectedType" class="form-control">
+                        <option default>Select a type</option>
+                        @foreach (var option in Model.ExerciseTypes)
+                        {
+                            if (@Model.SelectedType == option.Value)
+                            {
+                                <option value="@option.Value" selected>@option.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@option.Value">@option.Text</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="SelectedType" class="text-danger"></span>
+                </div>
+
+                <div  style="color:#393E46">
+                    <label name="SelectedMuscleGroups" class="control-label" style="color:#d4f0a5">ExerciseTypes:</label>
+                    <select class="js-example-basic-multiple form-select" name="SelectedMuscleGroups" multiple="multiple">
+                        @foreach (var musclegroup in Model.MuscleGroups)
+                        {
+                            @if (Model.SelectedMuscleGroups != null && Model.SelectedMuscleGroups.Contains(Int32.Parse(musclegroup.Value)))
+                            {
+                                <option value="@musclegroup.Value" selected>@musclegroup.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@musclegroup.Value">@musclegroup.Text</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="SelectedMuscleGroups" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Image" class="control-label"></label>
+                    <input asp-for="Image" class="form-control" accept="image/*" />
+                    <span asp-validation-for="Image" class="text-danger"></span>
+                </div>
+                <div style="text-align:center">
+                    <input type="submit" value="Edit" class="btn" style="width: 60%; background-color:#d4f0a5" id="addExerciseSubmitBtn" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2()
+        });
+    </script>
+}

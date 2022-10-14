@@ -1,0 +1,70 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Models
+@model RegisterModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+<style>
+    .loginBtn:hover {
+        background-color: #697180
+    }
+</style>
+
+<div class="container" style="display:flex; justify-content:center">
+    <div style="border: 6px solid #d4f0a5;border-radius: 0.6rem;padding: 1rem 2rem;width: 35rem;height: 50rem; background-color: #393E46; color:  #d4f0a5">
+        <h1 style="margin-left: -7%;border-bottom: 6px solid #d4f0a5;width: 114%; padding:0 0 3% 7%; color: #efefef">
+            Register
+        </h1>
+        <div id="form" class="d-flex flex-column" style="height: 90%;justify-content: space-around;">
+            <form asp-action="Register" asp-controller="UserAccount" style="height: 80%;display: flex;flex-direction: column;justify-content: space-evenly;">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div>
+                    <label asp-for="Username" class="control-label"></label>
+                    <input asp-for="Username" class="form-control" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div>
+                    <label name="PasswordString" class="control-label">Password</label>
+                    <input asp-for="PasswordString" type="password" class="form-control" />
+                    <span asp-validation-for="PasswordString" class="text-danger"></span>
+                </div>
+                <div>
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div>
+                    <label name="BirthDay" class="control-label">Birth day</label>
+                    <input asp-for="BirthDay" class="form-control" />
+                    <span asp-validation-for="BirthDay" class="text-danger"></span>
+                </div>
+                <div>
+                    <label name="Weight" class="control-label">Weight</label>
+                    <input type="number" asp-for="Weight" class="form-control" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+                <div style="text-align:center">
+                    <input type="submit" value="Register" class="btn" style="width: 60%; background-color:#d4f0a5" />
+                </div>
+            </form>
+            <div>
+                <h5>Already have an account?</h5>
+                <a class="btn loginBtn" style="color: #d4f0a5"asp-action="Login">Login</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

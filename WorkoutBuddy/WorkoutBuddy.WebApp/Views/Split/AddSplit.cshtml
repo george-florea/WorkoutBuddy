@@ -1,0 +1,233 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.ManageSplits.Models
+@model SplitModel
+
+@{
+    ViewData["Title"] = "Add split";
+}
+<div class="container" style="display:flex; justify-content:center">
+    <div style="border: 6px solid #d4f0a5;border-radius: 0.6rem;padding: 1rem 2rem;width: 35rem; background-color: #393E46; color:  #d4f0a5">
+        <h1 style="margin-left: -7%;border-bottom: 6px solid #d4f0a5;width: 114%; padding:0 0 3% 7%; color: #efefef">
+            Create a split
+        </h1>
+        <form asp-action="AddSplit" id="addsplitform">
+            <div class="d-flex flex-column justify-content-between" style="height:100%">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div style="margin: 5px 0">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input id = "SplitName" asp-for="Name" class="form-control" />
+                    <span id = "SplitNameSpan" asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div style="margin: 5px 0">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div id="workout" style="color: #393E46; margin: 5px 0">
+                    <div class="row">
+                        <span id = "WorkoutsSpan" asp-validation-for="Workouts" class="text-danger"></span>
+                    </div>
+        
+                    @if (Model.Workouts != null)
+                    {
+                        @for (var i = 0; i < Model.Workouts.Count; i++)
+                        {
+                            if (!Model.Workouts[i].IsDeleted)
+                            {
+                                <div id="container_@i">
+                                    <label class="control-label" style="color:#d4f0a5">Workout @(i+1):</label>
+                                    <div id="muscleGroupSelector_@i" class="form-group card card-body" style="margin: 10px; background-color: #d4f0a5; color:#393E46">
+                                        <input id="isDeleted_@i" style="display: none" name="Workouts[@i].IsDeleted" />
+                                        <input name="Workouts[@i].Id" style="display:none" value="@Model.Workouts[i].Id" />
+                                        <label class="control-label">Workout name</label>
+                                        <input name="Workouts[@i].WorkoutName" class="form-control" value="@Model.Workouts[i].WorkoutName"></input>
+                                        <span asp-validation-for="Workouts[@i].WorkoutName"></span>
+
+                                        <label class="control-label select-label">Muscle Groups</label>
+                                        <select id="mgSelect_@i" class="js-example-basic-multiple form-select form-control" multiple="multiple" name="Workouts[@i].SelectedMuscleGroups">
+                                            @foreach (var muscle in Model.MusclesGroups)
+                                            {
+                                                if (Model.Workouts[i].SelectedMuscleGroups.Contains(Int32.Parse(muscle.Value)))
+                                                {
+                                                    <option value="@muscle.Value" selected>@muscle.Text</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@muscle.Value">@muscle.Text</option>
+                                                }
+                                            }
+                                        </select>
+                                        <span class="text-danger" id="mgSpan_@i"></span>
+                                        <button id="deleteBtn_@i" class="btn btn-danger" style="margin-top:10px" type="button">Delete Workout</button>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    <button type="button" class="btn rounded-pill d-flex flex-row justify-content-around p-2" style="width: 35%; background-color:#d4f0a5; margin: 10px 0 5px 0" sty id="addWorkoutBtn">
+                        <div class="rounded-circle bg-white" style="width:20%; color:black; margin-right: 0.7rem;">
+                            <i class="fa-solid fa-plus"></i>
+                        </div>
+                        <div class="text-center">
+                            Add workout
+                        </div>
+                    </button>
+                </div>
+                <div style="margin: 5px 0">
+                    <label name="IsPrivate" class="control-label">Is the split public?</label>
+                    <input name="IsPrivate" id="privateBool" class="form-check-input" type="checkbox" checked="@Model.IsPrivate"/>
+                    <span asp-validation-for="IsPrivate" class="text-danger"></span>
+                </div>
+                <div style="text-align:center; margin: 5px 0">
+                    <input type="submit" value="Create" class="btn" style="width: 100%; background-color:#d4f0a5"/>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="~/js/Split/AddSplit.js"></script>
+    <script>
+        let btn = document.getElementById('addWorkoutBtn');
+        let i = 0;
+        @if(Model.Workouts != null)
+        {
+            <text>
+                i = '@Model.Workouts.Count'
+            </text>
+        
+        }
+
+        btn.onclick = e => {
+            let span = document.getElementById('WorkoutsSpan');
+            span.innerText = ""
+            var myArray = [];
+            @foreach (var item in Model.MusclesGroups)
+            {
+                @:myArray.push({ text: '@item.Text', value: '@item.Value' });
+            }
+                    CreateWorkout(myArray, i, '@Url.Action("GetExercisesByMuscleGroups", "Exercise")')
+            i++;
+        }
+
+        let bool = document.getElementById("privateBool");
+
+        bool.value = '@Model.IsPrivate';
+        bool.checked = '@Model.IsPrivate';
+
+        bool.onchange = e => {
+            if (bool.checked == true) {
+                bool.value = "false";
+            }
+            else {
+                bool.value = "true";
+            }
+        }
+
+        @for(var j = 0; Model.Workouts != null && j < Model.Workouts.Count; j++)
+        {
+            if(Model.Workouts[j].IsDeleted == false)
+            {
+                <text>
+                    window['deleteBtn' + '@j'] = document.getElementById('deleteBtn_@j')
+                    window['div' + '@j'] = document.getElementById('container_@j')
+                    window['isDeletedInput' + '@j'] = document.getElementById('isDeleted_@j')
+                    window['deleteBtn' + '@j'].onclick = e => { 
+                        window['div' + '@j'].style.display = 'none'
+                        window['isDeletedInput' + '@j'].value = true
+                    }
+
+
+                
+                </text>
+    }
+        }
+
+    </script>
+    <script>
+            $('#SplitName').change(e => {
+                $('#SplitNameSpan').text("");
+            });
+
+            let selected = [];
+            let filteredExercises = [];
+            @for (var i = 0; Model.Workouts != null && i < Model.Workouts.Count; i++)
+            {
+                if(Model.Workouts[i].IsDeleted == false)
+                {
+                    <text>
+                        $("#mgSelect_@i").select2();
+
+                        window['queryString' + @i] = "?";
+                        window['indexOfMuscles' + @i] = 0;
+
+                        for (let elem of $('#mgSelect_@i').select2('data')) {
+                            window['queryString' + @i] = `${window['queryString' + @i]}[${window['indexOfMuscles' + @i]}]=${elem.id}&`
+                            window['indexOfMuscles' + @i]++;
+                        }
+                
+                        window['exercises' + @i] = [];
+                        @foreach (var item in Model.Workouts.ElementAt(i).Exercises)
+                        {
+                            @:window['exercises' + @i].push('@item.ToString()');
+                        }
+                    
+
+                        $.ajax({
+                            type: "get",
+                            url: `@Url.Action("GetExercisesByMuscleGroups", "Exercise")${window['queryString' + @i]}`,
+                            success: (resp) => {
+                                filteredExercises = JSON.stringify(resp);
+                                ClearSelect('@i');
+                                buildDropdown(filteredExercises, '@i', window['exercises' + @i]);
+                                $('#exerciseList_@i').select2()
+                                selected = [];
+                                filteredExercises = []
+                            },
+                            error: (err) => {
+                                console.log(err);
+                            }
+                        })
+
+                        $("#mgSelect_@i").on('select2:select', function (e) {
+                            let queryString = "?";
+                            let indexOfMuscles = 0;
+
+                            for(let elem of $("#mgSelect_@i").select2('data')){
+                                queryString = `${queryString}[${indexOfMuscles}]=${elem.id}&`
+                                indexOfMuscles++;
+                            }
+
+                            let filteredExercises = [];
+
+                            $.ajax({
+                                type: "get",
+                                url: `@Url.Action("GetExercisesByMuscleGroups", "Exercise")${queryString}`,
+                                success: (resp) => {
+                                    filteredExercises = JSON.stringify(resp);
+                                    ClearSelect('@i');
+                                    debugger;
+                                    buildDropdown(filteredExercises, '@i');
+                                    $(`#exerciseList_@i`).select2()
+                                },
+                                error: (err) => {
+                                    console.log(err);
+                                }
+                            })
+                        });
+                    </text>
+                }
+            
+            }
+        
+            $('form').submit(e => {
+                return FormIsValid();
+            })
+
+    </script>
+}

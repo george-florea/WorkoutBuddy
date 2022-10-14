@@ -1,0 +1,28 @@
+﻿@media only screen and (max-width: 600px) {
+    .contentResp {
+        flex-direction: column !important;
+        height: auto !important;   
+    }
+    .contentResp > * {
+        width: 100%
+    }
+        .contentResp > *:last-child {
+            flex-direction: row !important;
+        }
+
+        .contentResp > *:last-child > *{
+            flex-direction:row !important;
+        }
+
+            .contentResp > *:last-child > * > *{
+                width:8rem
+            }
+
+    .containerResp{
+        width:100vw;
+    }
+
+    .buttonsResp > *{
+        width:11rem !important;
+    }
+}

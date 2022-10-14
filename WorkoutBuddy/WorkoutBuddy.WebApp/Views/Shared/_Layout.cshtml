@@ -1,0 +1,147 @@
+﻿@using WorkoutBuddy.Common.DTOs
+@using WorkoutBuddy.Entities.Enums
+@using WorkoutBuddy.WebApp.Code
+@inject CurrentUserDto CurrentUser
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WorkoutBuddy</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WorkoutBuddy.WebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header style="background-color: #393E46">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow">
+            <div class="container-fluid">
+                @if (CurrentUser.IsAuthenticated)
+                {
+                    <a class="sidemenu" style="display: none; color: #d4f0a5"><i class="fa-solid fa-bars"></i></a>
+                }
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color: #d4f0a5">Workout Buddy</a>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1 topnav">
+                        @if (CurrentUser.IsAuthenticated && !CurrentUser.IsDisabled)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" style="color: #d4f0a5"><i class="fa-solid fa-house"></i> Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a asp-controller="Exercise" asp-action="ExercisesList" class="nav-link" style="color: #d4f0a5"><i class="fa-solid fa-dumbbell"></i> Exercises</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Split" asp-action="Index" style="color: #d4f0a5"><i class="fa-solid fa-layer-group"></i> Splits</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div>
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (!CurrentUser.IsAuthenticated || CurrentUser.IsDisabled)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="UserAccount" asp-action="Login" style="color: #d4f0a5">Log in</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="UserAccount" asp-action="Register" style="color: #d4f0a5">Register</a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <div class="dropdown" style="margin-right: 4rem">
+                                    <a class="d-flex align-items-center text-decoration-none dropdown-toggle" style="color:#d4f0a5" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <strong class="username">@CurrentUser.Username</strong>
+                                    </a>
+                                    <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                                        <li><a class="dropdown-item" asp-controller="UserAccount" asp-action="ProfilePage">Profile Page</a></li>
+                                        <li><a class="dropdown-item" asp-controller="UserAccount" asp-action="AddWeight">Add weight</a></li>
+                                        <li><a class="dropdown-item" asp-controller="UserAccount" asp-action="EditProfile">Edit profile</a></li>
+                                        <li><a class="dropdown-item" asp-controller="UserAccount" asp-action="ChangePassword">Change password</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" asp-controller="UserAccount" asp-action="Logout">Log out</a></li>
+
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="body-container d-flex flex-row page-content">
+        <div class="sidebar" data-clicked="false" style="background-color: #d4f0a5">
+            @if (CurrentUser.IsAuthenticated && !CurrentUser.IsDisabled)
+            {
+                <div class="d-flex flex-column flex-shrink-0 p-3 h-100">
+                    <ul class="nav nav-pills flex-column mb-auto navlinks">
+                        <li class="nav-item">
+                                <a asp-controller="Exercise" asp-action="ExercisesList" class="resp nav-link link-dark"><i class="fa-solid fa-dumbbell"></i> Exercises</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="resp nav-link link-dark" asp-area="" asp-controller="Split" asp-action="Index"><i class="fa-solid fa-layer-group"></i> Splits</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="UserSplit" asp-action="Index" class="nav-link link-dark">
+                                <i class="fa-solid fa-folder-open"></i> My colection
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-controller="Rating" asp-action="Index" class="nav-link link-dark">
+                                <i class="fa-solid fa-ranking-star"></i> Ranking
+                            </a>
+                        </li>
+                        @if (CurrentUser.Roles.Contains(RoleTypes.Admin.ToString()))
+                        {
+                            <li>
+                                <a asp-controller="Admin" asp-action="Index" class="nav-link link-dark">
+                                    <i class="fa-solid fa-list"></i> Users List
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Admin" asp-action="PendingExercises" class="nav-link link-dark">
+                                    <i class="fa-solid fa-circle-question"></i> Exercise Requests
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+                    
+                </div>
+            }
+        </div>
+
+
+        <main role="main" class="pb-3 col pt-3 mainContent" style="background-color: #efefef">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer" style="background-color: #393E46; color: #d4f0a5">
+        <div class="container d-flex flex-row" style="justify-content: center; align-items:center">
+            <div style="color: #d4f0a5">Made with <i class="fa-solid fa-heart text-danger"></i> by George Florea</div>
+            <div class="d-flex flex-row">
+                <div style="padding:0 50px">
+                    <i class="fa-brands fa-github"></i> <a class="text-decoration-none" style="color: #d4f0a5" href="https://github.com/jovialjoker">jovialjoker</a>
+                </div>
+                <div>
+                    <i class="fa-brands fa-linkedin"></i> <a class="text-decoration-none" style="color: #d4f0a5" href="https://www.linkedin.com/in/george-a-florea/">George Florea</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script src="https://kit.fontawesome.com/54c6de26eb.js" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/UserSplit/AddProgress.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

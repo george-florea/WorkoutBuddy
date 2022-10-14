@@ -1,0 +1,119 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.AdminDashboard
+@using WorkoutBuddy.Entities.Enums
+@model List<UserModel>
+
+@{
+    ViewData["title"] = "Admin Dashboard";
+}
+
+<style>
+    .table td, .table th {
+        padding: 10px 14px;
+    }
+
+    .table td {
+        border-bottom: 1px solid #393E46;
+    }
+
+    .table th {
+        border-bottom: 2px solid #393E46;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+</style>
+
+<div class="container">
+    <h1>All users:</h1>
+    <hr />
+
+    <table class="table" style="background-color: #d4f0a5 ; color: #393E46; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th scope="col">Index</th>
+                <th scope="col">Name</th>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Edit profile</th>
+                <th scope="col">Disable Users</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (var i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td scope="row">
+                        @(i + 1)
+                    </td>
+                    <td >@Model[i].Name</td>
+                    <td >@Model[i].Username</td>
+                    <td >@Model[i].Email</td>
+                    <td >
+                        <a asp-controller="UserAccount" asp-action="EditUserProfile" asp-route-userId="@Model[i].UserId" class="btn btn-warning">Edit profile</a>
+                    </td>
+                    <td >
+                        @if (@Model[i].IsDeleted == false)
+                        {
+                            <a id="btn_@i" class="btn btn-danger">Disable</a>
+                        }
+                        else
+                        {
+                            <a id="btn_@i" class="btn btn-success">Activate</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        @for(var i = 0; i < Model.Count; i++)
+        {
+            <text>
+                $("#btn_@i").click(e => {
+                    var id = '@Model[@i].UserId'
+                    if ($("#btn_@i").text() == "Disable") {
+                        $.ajax({
+                        type: "post",
+                        url: "/UserAccount/DisableUser",
+                        success: (resp) => {
+                            console.log(resp);
+                            $("#btn_@i").text("Activate");
+                            $("#btn_@i").removeClass("btn-danger");
+                            $("#btn_@i").addClass("btn-success");
+                        },
+                        error: (err) => {
+                            console.log(err);
+                        },
+                        contentType: "application/json",
+                        data: JSON.stringify(id)
+                        })
+                    }
+                    else{
+                        $.ajax({
+                        type: "post",
+                        url: "/UserAccount/ActivateUser",
+                        success: (resp) => {
+                            console.log(resp);
+                            $("#btn_@i").text("Disable");
+                            $("#btn_@i").removeClass("btn-success");
+                            $("#btn_@i").addClass("btn-danger");
+                        },
+                        error: (err) => {
+                            console.log(err);
+                        },
+                        contentType: "application/json",
+                        data: JSON.stringify(id)
+                        })
+                    }
+                })
+            </text>
+        }
+        
+    </script>
+}

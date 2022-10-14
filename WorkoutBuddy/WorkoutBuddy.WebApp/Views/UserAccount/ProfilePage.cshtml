@@ -1,0 +1,65 @@
+﻿@using WorkoutBuddy.BusinessLogic.Implementation.Account.Models
+@model UserInfoModel
+@{
+    ViewData["Title"] = "Profile Page";
+}
+
+<div class="container box-shadow" style="display:flex;justify-content:center; flex-direction:column;align-items: center; height:90%">
+    <div class="profileResp" style="border: 6px solid #d4f0a5;border-radius: 0.6rem;padding: 1rem 2rem;width: 49rem; background-color: #393E46; color:  #d4f0a5; height:100%">
+        <div class="row" style="margin-left: -4%;border-bottom: 6px solid #d4f0a5;width: 108%;padding: 0 0 1rem 1rem;color: #efefef">
+            <div class="col-8">
+                <h1 class="card-title">@(Model.Username)'s profile page</h1>
+            </div>
+        </div>
+        <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-around; height:90%  ">
+            <div class="row">
+                <div class="card-text">
+                    <strong>Name: </strong> @Model.Name
+                </div>
+            </div>
+            <div class="row">
+                <div class="card-text">
+                    <strong>Username: </strong> @Model.Username
+                </div>
+            </div>
+            <div class="row">
+                <div class="card-text">
+                    <strong>Roles: </strong>
+                    <ul>
+                        @foreach (var role in @Model.Roles)
+                        {
+                            <li>
+                                @role
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="card-text">
+                    <strong>BirthDate: </strong> @Model.BirthDate.ToString("dd/MM/yyyy")
+                </div>
+            </div>
+            <div class="row">
+                <div class="card-text">
+                    <strong>Email: </strong> @Model.Email
+                </div>
+            </div>
+            <div class="row">
+                <div class="card-text">
+                    <strong>Number of points: </strong> @Model.PointsNo
+                </div>
+            </div>
+            <div class="row">
+                <div class="card-text">
+                    <strong>Current Weight: </strong> @Model.CurrentWeight kgs
+                </div>
+            </div>
+            <div style="display: flex;justify-content: space-evenly;">
+                <a class="btn btn-secondary" asp-controller="UserAccount" asp-action="AddWeight"><i class="fa-solid fa-plus"></i> Add weight</a>
+                <a class="btn btn-secondary" asp-controller="UserAccount" asp-action="EditProfile"><i class="fa-solid fa-screwdriver-wrench"></i> Edit profile</a>
+                <a class="btn btn-secondary" asp-controller="UserAccount" asp-action="ChangePassword"><i class="fa-solid fa-pen-to-square"></i> Change password</a>
+            </div>
+        </div>
+    </div>
+</div>
